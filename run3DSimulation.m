@@ -235,9 +235,11 @@ function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFram
 			latitude = deg2rad((90-startLatitude)*t+startLatitude);
 			cameraPoint = sphericalToCartesion([cameraHeight,lonitude,latitude]);
 			camreaTarget = startCameraTarget*(1-b);
+			camupVector = (cameraPoint'/norm(cameraPoint))*(1-t) + [0,0,1]*t;
+			
 			camtarget(mainAx,camreaTarget);
 			campos(mainAx,cameraPoint);
-			camup(mainAx,[0,0,1]);
+			camup(mainAx,camupVector);
 			drawnow;
 		end
 	end
