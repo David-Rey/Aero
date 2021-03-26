@@ -1,10 +1,10 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% David Reynolds
-% email: reynod13@my.erau.edu
-% date: February 13, 2021
-% EGR 115 - Section 15 
-% Assignment: Final Project
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+########################################
+# David Reynolds
+# email: reynod13@my.erau.edu
+# date: February 13, 2021
+# EGR 115 - Section 15 
+# Assignment: Final Project
+########################################
 %
 % AeroMain.m
 %
