@@ -13,9 +13,9 @@
  drag coefficient as a function of mach number.
  
  Programming Techniqes (press 'Ctrl + F' to find faster)
-<SM:___>			FILENAME
-<SM:IF>			GUIinput
-<SM:ROP>			GUIinput
+#<SM:___>			FILENAME
+#<SM:IF>			GUIinput
+#<SM:ROP>			GUIinput
 <SM:BOP>			runSimulation
 <SM:FOR>			GUIinput
 <SM:WHILE>			GUIinput
