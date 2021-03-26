@@ -1,5 +1,4 @@
 # David Reynolds
-# Email: reynod13@my.erau.edu
 # Start Date: February 13, 2021
 # EGR 115 - Section 15 
 # Assignment: Final Project
