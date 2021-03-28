@@ -1,11 +1,11 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % David Reynolds
 % Email: reynod13@my.erau.edu
 % Start Date: February 13, 2021
 % EGR 115 - Section 15 
 % Assignment: Final Project
 % Filename: AeroMain.m
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % The following code is avable on github: https://github.com/David-Rey/Aero
 %
