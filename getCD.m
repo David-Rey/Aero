@@ -1,3 +1,5 @@
+% Gets drag coefficient at a mach number.
+
 function CD = getCD(machData, mach, staticCD)
 	if isempty(machData)
 		CD = staticCD;

@@ -1,10 +1,7 @@
+% Gets atmospheric data at a specific height using the 1976 Standard Atmosphere.
 
-%clc;
-%clear;
-
-%https://en.wikipedia.org/wiki/Barometric_formula
-%https://www.digitaldutch.com/atmoscalc/
-%getStandardATM(86000);
+% https://en.wikipedia.org/wiki/Barometric_formula
+% https://www.digitaldutch.com/atmoscalc/
 
 function [pressure,density,temperature] = getStandardATM(height)
 	% constants

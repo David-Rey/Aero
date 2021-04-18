@@ -1,3 +1,5 @@
+% UIcontrol update for the GUI interface.
+
 function staticEnvUpdate(~,~,density,temprature,windDir,windSpeed,loc)
 	set(density,'enable','on');
 	set(temprature,'enable','on');

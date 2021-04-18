@@ -1,7 +1,7 @@
 % UIcontrol update for the GUI interface.
 
-function updateGravityCheckBox(src,~,textBox)
-	if get(src,'Value')
+function CDUpdate(src,~,textBox)
+	if ~get(src,'Value')
 		set(textBox,'Enable','on');
 	else
 		set(textBox,'Enable','off');

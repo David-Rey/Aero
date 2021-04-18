@@ -1,6 +1,8 @@
+% Function is called when the user updates the point under the starting conditions.
+
 function updateLonLat(~,~,lonUI,latUI,hUI,ax,pointGUI)
 	try
-		lon = str2double(get(lonUI, 'String')); %<SM:STRING>
+		lon = str2double(get(lonUI, 'String'));
 		lat = str2double(get(latUI, 'String'));
 		h = str2double(get(hUI, 'String'));
 		if isnan(h) || h < 0

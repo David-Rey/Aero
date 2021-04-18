@@ -1,6 +1,9 @@
-function thrustVector = getThrust(thrustData,time)
+% Gets thrust vector given thrust data.
+
+function [shpericalThrustVector,thrustVector] = getThrust(thrustData,time)
 	if isempty(thrustData)
 		thrustVector = [0;0;0];
+		shpericalThrustVector = [0;0;0];
 		return;
 	end
 	if time < thrustData(1,end)
@@ -18,8 +21,12 @@ function thrustVector = getThrust(thrustData,time)
 		directionLower = thrustData(4,timeLower);
 		directionUpper = thrustData(4,timeUpper);
 		direction = interp1([timeLower,timeUpper],[directionLower,directionUpper],time*10+1);
-		thrustVector = flip(sphericalToCartesion([thrust;direction;angle]));
+		%shpericalThrustVector = [thrust;angle;direction];
+		shpericalThrustVector = [thrust;direction;angle];
+		
+		thrustVector = flip(sphericalToCartesion(shpericalThrustVector));
 	else
 		thrustVector = [0;0;0];
+		shpericalThrustVector = [0;0;0];
 	end
 end

@@ -1,17 +1,17 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % David Reynolds
 % Email: reynod13@my.erau.edu
 % Start Date: February 13, 2021
 % EGR 115 - Section 15 
 % Assignment: Final Project
 % Filename: AeroMain.m
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % The following code is avable on github: https://github.com/David-Rey/Aero
-%
+
 % The following is a program developed by David Reynolds. This program
 % calculates the trajectories of ballistic objects and objects under thrust.
-% This program takes into account drag, the rotation of the earth, change 
+% This program takes into account drag, the rotation of the earth, change
 % in gravity, atmospheric properties as a function of height and change in
 % drag coefficient as a function of mach number.
 
@@ -26,7 +26,7 @@
 %<SM:PDF_CALL>		AeroMain
 %<SM:PDF_PARAM>		AeroMain
 %<SM:PDF_RETURN>	AeroMain
-%<SM:STRING>		run3DSimulation
+%<SM:STRING>		run3DSimulation, GUIinput
 %<SM:REF>			runSimulation
 %<SM:AUG>			GUIinput
 %<SM:SEARCH>		getAtmosphere
@@ -42,11 +42,13 @@
 %GUIinput.m					244 lines	(224 sloc)  14.5 KB
 %calculateRunTime.m			12 lines 	(12 sloc)  	453 Bytes
 %cartesionToSpherical.m		9 lines 	(8 sloc)  	204 Bytes
+%CDUpdate.m
 %generateRandomValues.m		6 lines 	(6 sloc)  	229 Bytes
 %getAbsVectors.m			7 lines 	(6 sloc)  	282 Bytes
 %getAtmosphere.m			77 lines 	(68 sloc)  	4.48 KB
 %getAtmosphereAtHeight.m	35 lines 	(34 sloc)  	1.16 KB
 %getCD.m					20 lines 	(20 sloc)  	476 Bytes
+%getExactScreenSize.m
 %getGravity.m				8 lines 	(8 sloc) 	164 Bytes
 %getLocalVectors.m			7 lines 	(6 sloc)  	286 Bytes
 %getRelHumidity.m			15 lines 	(11 sloc)  	324 Bytes
@@ -63,7 +65,9 @@
 %sphericalToCartesion.m		9 lines 	(8 sloc)  	211 Bytes
 %standardATMUpdate.m		7 lines 	(7 sloc)  	232 Bytes
 %staticEnvUpdate.m			7 lines 	(7 sloc)  	226 Bytes
+%UIanimate.m
 %updateGravityCheckBox.m	7 lines 	(7 sloc)  	148 Bytes
+%updateLonLat.m
 %updateObjectValues.m		13 lines 	(12 sloc)  	528 Bytes
 %zoomEarth.m				7 lines 	(7 sloc)  	185 Bytes
 
@@ -72,15 +76,17 @@
 %note: totals taken on March 26 2020. Data may not be up to date. 
 %*comments not counted in AeroMain.m
 
+clear
+
 % really? 3 lines of code?
-% input
-input = GUIinput(); %<SM:PDF_CALL>
+% put true in parameter to get animation i.e. GUIinput(true);
+input = GUIinput(true); %<SM:PDF_CALL>
 
 % does computation 
 output = runSimulation(input); %<SM:PDF_PARAM> <SM:PDF_RETURN>
 
 % output
-plotOutput(output); 
+plotOutput(output);
 
 
 %MIT License

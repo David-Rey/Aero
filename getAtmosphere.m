@@ -1,3 +1,6 @@
+%%% Description %%%
+% This funciton gets the data from NOAA (National Oceanic and Atmospheric Administration)
+% https://www.spc.noaa.gov/exper/soundings/
 
 %%% Output %%%
 %interpWeather: 2D weather array containing all interpolated data
@@ -21,7 +24,7 @@ function [NOAAdataAvailable,NOAAdataReliable,finalWeather] = getAtmosphere(curre
 	URL = strcat(URL,date,'00_OBS/',currectLocationID,'.txt'); % combines to get valid URL
 	fileName = 'weatherData.txt'; % name of the file where data is located
 	try
-		websave(fileName,URL); % attemps to open file (may result in error however in try)
+		websave(fileName,URL); % attemps to open file (may result in error however, will try)
 		NOAAdataAvailable = true; % no error therfore data is available
 		
 		%%% scanning file & get data %%%
@@ -53,11 +56,11 @@ function [NOAAdataAvailable,NOAAdataReliable,finalWeather] = getAtmosphere(curre
 			extraArr = zeros(4,(floor((86000-leadPeriod)/leadPeriod))); % adds array that goes beyond the data
 			index = 1; % sets index = 1
 			
-			for h=maxAltitudeWData+leadPeriod:500:86000
+			for h = maxAltitudeWData+leadPeriod:500:86000
 				[pressure,~,temprature] = getStandardATM(h); % get data from STND ATM
-				extraArr(1,index) = h;
-				extraArr(2,index) = pressure/100;
-				extraArr(3,index) = temprature-273;
+				extraArr(1,index) = h; % sets the height for each iteration
+				extraArr(2,index) = pressure / 100; % Pa to millibar
+				extraArr(3,index) = temprature - 273; % K to C
 				index = index + 1;
             end
 			finalWeather(1,:) = dh; % height (m)

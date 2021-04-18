@@ -1,5 +1,7 @@
+% Gets atmospheric data at a specific height. 
+
 function [density,pressure,temperature,SoS,windDir,windSpeed] = getAtmosphereAtHeight...
-	(h,weather,weatherID,available,reliable)
+	(h,weather,weatherID,available,reliable,staticDensity,staticTemp,staticWindDir,staticWindSpeed)
 	% waether ID 1 == at locaiton, ID == 2 Standard, ID == 3 static
 	% [density, pressure, temperature, speed of sound, wind dir., wind speed]
 	if h < 1
@@ -25,11 +27,11 @@ function [density,pressure,temperature,SoS,windDir,windSpeed] = getAtmosphereAtH
 		windDir = 0;
 		windSpeed = 0;
 	else % 'STATIC'
-		density = 1;
+		density = staticDensity;
 		pressure = 100000;
-		temperature = 273;
+		temperature = staticTemp;
 		SoS = sqrt(1.401*8.3145*(temperature+273.15)/28.9647*1000);
-		windDir = 0;
-		windSpeed = 0;
+		windDir = staticWindDir;
+		windSpeed = staticWindSpeed;
 	end
 end

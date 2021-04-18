@@ -1,12 +1,11 @@
+% This runs the 3D simulation when the user clicks the “3D simulation” button.
+
 function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFrame,textCheck,hoopCheck,trackCheck,endCheck)
 	figure;
 	axis equal tight vis3d off
 	camproj('orthographic');
-	%set(gcf,'position',[100,60,1380,820],'Units','pixels');
-	%set(gcf,'units','normalized','outerposition',[0 0 1 1]);
 	set(gcf, 'Position', get(0, 'Screensize'));
 	set(gcf,'units','pixels');
-	%Pix_SS = get(0,'screensize');
 	set(gcf,'WindowState','Maximized');
 	hold on
 	rotate3d on % rotation pre selcted
@@ -52,10 +51,13 @@ function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFram
 			plotCircle3D(mainAx,absRotPosition',getAbsVectors(groundVelocity',rotPosition(3),rotPosition(2))',hoopSize,'g-',earthRadius);
 		end
 	end
+	
 	%%% Text Init %%%
 	windowPos = get(gcf,'Position');
-	windowWidth = windowPos(3);
-	windowHeight = windowPos(4);
+	windowPos = getExactScreenSize;
+	windowWidth = windowPos(1);
+	windowHeight = windowPos(2);
+	
 	deltaYtext = 15;
 	startXtext = 8;
 	startYtext = 14;
@@ -63,6 +65,7 @@ function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFram
 	bottomRightTextLength = 14;
 	topRightTextLength = 9;
 	topLeftTextLength = 13;
+	screenOffset = 165;
 
 	for i=0:bottomLeftTextLength-1
 		telemetry(i+1) = text(axHidden,startXtext,...
@@ -74,16 +77,16 @@ function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFram
 		startYtext+deltaYtext*(bottomRightTextLength-i-1),'');
 	end
 	set(telemetry(lengthSoFar+1:lengthSoFar+bottomRightTextLength),'HorizontalAlignment','right');
-	lengthSoFar = lengthSoFar + bottomRightTextLength;
+	lengthSoFar = lengthSoFar+bottomRightTextLength;
 	for i=0:topRightTextLength-1
 		telemetry(lengthSoFar+i+1) = text(axHidden,windowWidth-startXtext,...
-		windowHeight-120-startYtext+deltaYtext*-i,'');
+		windowHeight-screenOffset-startYtext+deltaYtext*-i,'');
 	end
 	set(telemetry(lengthSoFar+1:lengthSoFar+topRightTextLength),'HorizontalAlignment','right');
-	lengthSoFar = lengthSoFar + topRightTextLength;
+	lengthSoFar = lengthSoFar+topRightTextLength;
 	for i=0:topLeftTextLength-1
 		telemetry(lengthSoFar+i+1) = text(axHidden,startXtext,...
-		windowHeight-120-startYtext+deltaYtext*-i,'');
+		windowHeight-screenOffset-startYtext+deltaYtext*-i,'');
 	end
 	
 	linePos = [];
@@ -105,7 +108,9 @@ function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFram
 		absPositionOnEarth = sphericalToCartesion([earthRadius,rotPosition(2),rotPosition(3)]);
 		
 		camDistance = speed^2 + currectHeight + 5000;
-		cameraPos = getAbsVectors([camDistance;camDistance;0],rotPosition(3),rotPosition(2));
+		%upScaleFactor = log2((currectHeight/earthRadius)+1)+1;
+		upScaleFactor = 1.1;
+		cameraPos = getAbsVectors([camDistance*upScaleFactor;camDistance;0],rotPosition(3),rotPosition(2));
 		if trackCheck
 			camup(mainAx,absRotPosition);
 			campos(mainAx,absRotPosition + cameraPos);
@@ -185,14 +190,14 @@ function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFram
 			sprintf('dragForce2 (N) %.3f',vectorData(13,2,iteration)),...
 			sprintf('dragForce3 (N) %.3f',vectorData(13,3,iteration)),...
 			sprintf('buoyancyForce (N) %.3f',vectorData(11,1,iteration)),...
-			sprintf('gravityForce (N) %.3f',vectorData(12,1,iteration)),... %totalLocalForce
+			sprintf('gravityForce (N) %.3f',vectorData(12,1,iteration)),...
 			sprintf('magTotalLocalForce (N) %.3f',norm(vectorData(16,:,iteration))),...
 			sprintf('totalLocalForce1 (N) %.3f',vectorData(16,1,iteration)),...
 			sprintf('totalLocalForce2 (N) %.3f',vectorData(16,2,iteration)),...
 			sprintf('totalLocalForce3 (N) %.3f',vectorData(16,3,iteration)),...
 			sprintf('Thrust (N) %.3f',vectorData(15,1,iteration)),...
-			sprintf('trustDir (deg) %.3f',90+rad2deg(vectorData(15,2,iteration))),...
-			sprintf('thrustAngle (deg) %.3f',90-rad2deg(vectorData(15,3,iteration)))};
+			sprintf('trustDir (deg) %.3f',90+rad2deg(vectorData(15,3,iteration))),...
+			sprintf('thrustAngle (deg) %.3f',rad2deg(vectorData(15,2,iteration)))};
 			
 			mainText = horzcat(bottomLeftText,bottomRightText,topRightText,topLeftText);
 		
@@ -227,15 +232,15 @@ function run3DSimulation(scalerData,vectorData,framesPerSecond,iterationsPerFram
 	k = 2;
 	if endCheck
 		fprintf('Starting End Animation.\n');
-		for i=0:0.3:nFrames
-			t = (2*exp((i-nFrames)/s)-exp(2*(i-nFrames)/s)-2*exp((-nFrames)/s)-exp(2*(-nFrames)/s))/(1-2*exp((-nFrames)/s)-exp(2*(-nFrames)/s)); % this is what magic looks like
+		for i=-nFrames:0.3:0
+			t = (2*exp(i/s)-exp(2*i/s)-2*exp((-nFrames)/s)-exp(2*(-nFrames)/s))/(1-2*exp((-nFrames)/s)-exp(2*(-nFrames)/s)); % this is what magic looks like
 			b = (exp(k*(t-1))-exp(-k))/(1-exp(-k)); % more magic. I gave up on variable names btw
-			cameraHeight = earthRadius*16*b+startCameraPoint(1); % make better
+			cameraHeight = startCameraPoint(1)*(1-b) + earthRadius*17*b;
 			lonitude = deg2rad((t/4*nFrames)+startLonitude);
 			latitude = deg2rad((90-startLatitude)*t+startLatitude);
 			cameraPoint = sphericalToCartesion([cameraHeight,lonitude,latitude]);
 			camreaTarget = startCameraTarget*(1-b);
-			camupVector = (cameraPoint'/norm(cameraPoint))*(1-t) + [0,0,1]*t;
+			camupVector = (cameraPoint'/norm(cameraPoint))*(1-b) + [0,0,1]*b;
 			
 			camtarget(mainAx,camreaTarget);
 			campos(mainAx,cameraPoint);

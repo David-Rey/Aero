@@ -1,3 +1,5 @@
+% Gets gravity given height.
+
 function g = getGravity(h,gravitybool,gravityValue)
 	if gravitybool
 		g = gravityValue;

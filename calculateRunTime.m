@@ -1,3 +1,6 @@
+% This calculates the runtime in the output figure when the user clicks
+% “Calculate Runtime”.
+
 function calculateRunTime(~,~,FPSText,iterationPerFrameText,nIterations,runTimeText)
 	FPS = str2double(get(FPSText,'String'));
 	iterationPerFrame = str2double(get(iterationPerFrameText,'String'));

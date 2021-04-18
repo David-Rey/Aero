@@ -1,3 +1,5 @@
+% This does the computation to calculate the trajectory of the object.
+
 function output = runSimulation(input)
 	%%% Projectile Parameters %%%
 	mass = input{1};
@@ -20,7 +22,7 @@ function output = runSimulation(input)
 	locationID = input{16};
 	
 	%%% weather and NOAA data %%%
-	fprintf('Getting weather data from NOAA. This may take a few seconds if running for the first time today.\n');
+	fprintf('Getting weather data from NOAA.\nThis may take a few seconds if running for the first time today.\n');
 	[NOAAavailable,NOAAreliable,weather] = getAtmosphere(locationID);
 	fprintf('NOAA data received.\n');
 	
@@ -42,16 +44,15 @@ function output = runSimulation(input)
 	machData = [];
 	if dynamicCD
 		deltaMach = 0:.01:4;
-		%xlsMachData = xlsread('CDdata.xlsx',1,'A2:B10')';
 		xlsMachData = xlsread('CDdata.xlsx',1)';
 		machData = [deltaMach;makima(xlsMachData(1,:),xlsMachData(2,:),deltaMach)];
 	end
 	%%% thrust data %%%
 	thrustData = [];
 	if dynamicThrust
-		xlsthrustData = xlsread('ThrustData.xlsx',1,'A2:D10');
+		xlsthrustData = xlsread('ThrustData.xlsx',1);
 		thrustdt = 0:0.1:xlsthrustData(end,1);
-		xlsthrustData(:,3) = deg2rad(xlsthrustData(:,3));
+		xlsthrustData(:,3) = deg2rad(90-xlsthrustData(:,3));
 		xlsthrustData(:,4) = deg2rad(xlsthrustData(:,4)-90);
 		thrustData = [thrustdt; interp1(xlsthrustData(:,1),xlsthrustData(:,2),thrustdt);...
 					  makima(xlsthrustData(:,1),xlsthrustData(:,3),thrustdt);
@@ -60,7 +61,6 @@ function output = runSimulation(input)
 	%%% Constants %%%
 	earthRadius = 6371000;
 	time = 0.0;
-	maxTime = 90000;
 	iteration = 1;
 	earthRadPerSec = 0;
 	if rotatingEarth
@@ -90,18 +90,17 @@ function output = runSimulation(input)
 	scalerData = NaN(17,maxIterations);
 	vectorData = NaN(15,3,maxIterations);
 	fprintf('Starting Simulation.\n');
-	frameEndTime = -1;
-	pauseTime = -1;
 	simStartTime = tic;
 	%    3
 	%   2
 	%  1
 	% LAUNCH!!!!
-	while sphericalPosition(1) >= earthRadius && iteration < maxIterations && sphericalPosition(1) <= earthRadius * 4 && toc(simStartTime) < maxComputeTime %<SM:BOP>
-		%frameStartTime = tic; % starts a timer for the iteration
-	
+	while sphericalPosition(1) >= earthRadius && iteration < maxIterations &&...
+			sphericalPosition(1) <= earthRadius * 20 && toc(simStartTime) < maxComputeTime %<SM:BOP>
+
 		[density,pressure,temperature,SoS,windDir,windSpeed] = getAtmosphereAtHeight... % Gets Atmospheric data
-			(currectHeight,weather,weatherType,NOAAavailable,NOAAreliable);
+			(currectHeight,weather,weatherType,NOAAavailable,NOAAreliable,...
+			staticDensity,staticTemp,staticWindDir,staticWindSpeed);
 	
 		windVelocity = groundVelocity + [0;windSpeed*-cos(windDir);windSpeed*sin(windDir)]; 
 		speedInWind = norm(windVelocity); %<SM:NEWFUN>
@@ -114,24 +113,20 @@ function output = runSimulation(input)
 		if currectHeight > 86000 % is in space 
 			dt = dtInSpace;
 			dragForce = [0;0;0];
-			isInSpace = 'Yes';
 		else
 			dt = dtInATM;
 			dragForce =  -0.5 * density * speedInWind^2 * dragCoefficient * area * getUnitVector(windVelocity);
-			isInSpace = 'No';
 		end
 		
 		buoyancyForce = [density * volume * -gravity;0;0];
 		gravityForce = [mass * gravity;0;0];
-		applyedForce = getThrust(thrustData,time);
-		sphericalAppForce = cartesionToSpherical(applyedForce);
+		[sphericalAppForce,applyedForce] = getThrust(thrustData,time);
 		totalLocalForce = dragForce + buoyancyForce + gravityForce + applyedForce;
 
 		localAcceleration = totalLocalForce / mass;
 		absAcceleration = getAbsVectors(localAcceleration, sphericalPosition(3), sphericalPosition(2));
 		absVelocty = absVelocty + absAcceleration * dt;
 		absPosition = absPosition + absVelocty * dt;
-		%%% ^^^ this is where the magic happens :)
 		
 		localVelocity = getLocalVectors(absVelocty, sphericalPosition(3), sphericalPosition(2));
 		tanVelocity = earthRadPerSec * (earthRadius + currectHeight) * sin(sphericalPosition(3));

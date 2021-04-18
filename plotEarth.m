@@ -1,6 +1,8 @@
-function plotEarth(ax,earthRadius)
+% Plots the earth borders, latitude, and longitude lines. (THIS FUNCTION IS NOT MADE BY ME)
 % Code below done by Chad Greene
 % https://www.mathworks.com/matlabcentral/answers/350195-how-can-you-plot-lines-of-latitude-and-longitude-on-a-globe-without-using-the-mapping-toolbox
+
+function plotEarth(ax,earthRadius)
 	latspacing = 10;
 	lonspacing = 20;
 

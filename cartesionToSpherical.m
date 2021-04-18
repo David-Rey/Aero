@@ -1,3 +1,5 @@
+% Converts point from Cartesian to spherical coordinate. 
+
 function spherical = cartesionToSpherical(cartesion)
 	x = cartesion(1);
 	y = cartesion(2);

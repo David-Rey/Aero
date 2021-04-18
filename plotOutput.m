@@ -1,6 +1,8 @@
+% This plots the output after the computation.
+
 function plotOutput(data)
 	fprintf('Plotting Trajectory.\n');
-	fig = figure('Position',[100,100,1080,800],'Name','Output Plots');
+	fig = figure('Position',[200,150,1080,800],'Name','Output Plots');
 	
 	trajectory = data{1};
 	weather = data{3};
@@ -94,9 +96,8 @@ function plotOutput(data)
 			[~,density(i+1),temp(i+1)] = getStandardATM(h);
 		end
 	end
-	grid on
-	% https://www.mathworks.com/help/matlab/creating_plots/graph-with-multiple-x-axes-and-y-axes.html
-	ylim([0,maxDispHeight]);
+	grid on 
+	ylim([0,maxDispHeight]); % https://www.mathworks.com/help/matlab/creating_plots/graph-with-multiple-x-axes-and-y-axes.html
 	densityLine = line(density,height,'Color','b','LineWidth',1.5);
 	ax1 = gca; % current axes
 	ax1_pos = ax1.Position; % position of first axes

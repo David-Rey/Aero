@@ -1,3 +1,5 @@
+% Generates random values for the GUI.
+
 function generateRandomValues(~,~,mass,area,volume,dragCof)
 	set(mass, 'String', rand*100+10); %<SM:RANDGEN> %<SM:RANDUSE>
 	set(area, 'String', rand+.1);
